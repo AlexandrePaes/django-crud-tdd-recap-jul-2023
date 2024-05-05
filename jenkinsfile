@@ -1,14 +1,14 @@
 pipeline {
-    agent any
-    // agent {
-    //     kubernetes {
-    //         label 'my-django-app'
-    //         containerTemplate {
-    //             name 'python'
-    //             image 'python:3.8'
-    //         }
-    //     }
-    // }
+    // agent any
+    agent {
+        kubernetes {
+            label 'my-django-app'
+            containerTemplate {
+                name 'python'
+                image 'python:3.8'
+            }
+        }
+    }
     // stages {
     //   stage('Checkout') {
     //      steps {
@@ -16,15 +16,13 @@ pipeline {
     //      }
     //   }
     // }
-
-    stage("Clone Code") {
-      steps {
-        echo "Cloning the code"
-        git url: "https://github.com/AlexandrePaes/django-crud-tdd-recap-jul-2023.git", branch: "main"
-      }
-    }  
-
     stages {
+      stage("Clone Code") {
+        steps {
+          echo "Cloning the code"
+          git url: "https://github.com/AlexandrePaes/django-crud-tdd-recap-jul-2023.git", branch: "main"
+        }
+      } 
       stage('Build and Test') {
         steps {
           container(name: 'python', shell: '/bin/sh') {
@@ -40,6 +38,8 @@ pipeline {
           }
         }
       }
+  }
+}
       // stage('Deploy to Kubernetes') {
       //   steps {
       //     container(name: 'python', shell: '/bin/sh') {
@@ -79,5 +79,5 @@ pipeline {
         //         sh "docker-compose down && docker-compose up -d"
         //     }
         // }
-    }
-}
+//     }
+// }
