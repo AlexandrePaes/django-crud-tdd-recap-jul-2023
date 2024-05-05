@@ -1,13 +1,14 @@
 pipeline {
-    agent {
-        kubernetes {
-            label 'my-django-app'
-            containerTemplate {
-                name 'python'
-                image 'python:3.8'
-            }
-        }
-    }
+    agent any
+    // agent {
+    //     kubernetes {
+    //         label 'my-django-app'
+    //         containerTemplate {
+    //             name 'python'
+    //             image 'python:3.8'
+    //         }
+    //     }
+    // }
     stages {
       stage('Checkout') {
          steps {
