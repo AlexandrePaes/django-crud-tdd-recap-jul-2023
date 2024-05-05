@@ -1,7 +1,45 @@
 pipeline {
-    agent any
+    agent {
+        kubernetes {
+            label 'my-django-app'
+            containerTemplate {
+                name 'python'
+                image 'python:3.8'
+            }
+        }
+    }
+    stages {
+      stage('Checkout') {
+         steps {
+            checkout scm
+         }
+      }
+    }  
 
     stages {
+      stage('Build and Test') {
+        steps {
+          container(name: 'python', shell: '/bin/sh') {
+            sh 'pip install -r requirements.txt'
+            sh 'python manage.py test'
+          }
+        }
+      }
+      stage('Build Docker Image') {
+        steps {
+          container(name: 'python', shell: '/bin/sh') {
+            sh 'docker build -t my-django-app .'
+          }
+        }
+      }
+      // stage('Deploy to Kubernetes') {
+      //   steps {
+      //     container(name: 'python', shell: '/bin/sh') {
+      //       sh 'kubectl apply -f kubernetes/deployment.yaml'
+      //     }
+      //   }
+      // }
+//---------------------------------------------------------------
         // stage("Clone Code") {
         //     steps {
         //         echo "Cloning the code"
@@ -9,29 +47,29 @@ pipeline {
         //     }
         // }
 
-        stage("Build") {
-            steps {
-                echo "Building the Docker image"
-                sh "docker build -t task ."
-            }
-        }
+        // stage("Build") {
+        //     steps {
+        //         echo "Building the Docker image"
+        //         sh "docker build -t task ."
+        //     }
+        // }
 
-        stage("Push to Docker Hub") {
-            steps {
-                echo "Pushing the Docker image to Docker Hub"
-                withCredentials([usernamePassword(credentialsId: "dockerHub", passwordVariable: "dockerHubPass", usernameVariable: "dockerHubUser")]) {
-                    sh "docker task ${env.dockerHubUser}/task"
-                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                    sh "docker push ${env.dockerHubUser}/task"
-                }
-            }
-        }
+        // stage("Push to Docker Hub") {
+        //     steps {
+        //         echo "Pushing the Docker image to Docker Hub"
+        //         withCredentials([usernamePassword(credentialsId: "dockerHub", passwordVariable: "dockerHubPass", usernameVariable: "dockerHubUser")]) {
+        //             sh "docker task ${env.dockerHubUser}/task"
+        //             sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+        //             sh "docker push ${env.dockerHubUser}/task"
+        //         }
+        //     }
+        // }
 
-        stage("Deploy") {
-            steps {
-                echo "Deploying the container"
-                sh "docker-compose down && docker-compose up -d"
-            }
-        }
+        // stage("Deploy") {
+        //     steps {
+        //         echo "Deploying the container"
+        //         sh "docker-compose down && docker-compose up -d"
+        //     }
+        // }
     }
 }
