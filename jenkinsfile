@@ -9,11 +9,18 @@ pipeline {
     //         }
     //     }
     // }
-    stages {
-      stage('Checkout') {
-         steps {
-            checkout scm
-         }
+    // stages {
+    //   stage('Checkout') {
+    //      steps {
+    //         checkout scm
+    //      }
+    //   }
+    // }
+
+    stage("Clone Code") {
+      steps {
+        echo "Cloning the code"
+        git url: "https://github.com/AlexandrePaes/django-crud-tdd-recap-jul-2023.git", branch: "main"
       }
     }  
 
