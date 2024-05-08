@@ -38,15 +38,15 @@ pipeline {
           }
         }
       }
-  }
-}
-      // stage('Deploy to Kubernetes') {
-      //   steps {
-      //     container(name: 'python', shell: '/bin/sh') {
-      //       sh 'kubectl apply -f kubernetes/deployment.yaml'
-      //     }
-      //   }
-      // }
+      stage('Deploy to Kubernetes') {
+        steps {
+          container(name: 'python', shell: '/bin/sh') {
+            sh 'kubectl apply -f kubernetes/deployment.yaml'
+          }
+        }
+      }
+    }
+}  
 //---------------------------------------------------------------
         // stage("Clone Code") {
         //     steps {
