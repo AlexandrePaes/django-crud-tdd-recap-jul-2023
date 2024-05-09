@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-django-app
+  name: task
 spec:
   replicas: 3 # Adjust the number of replicas as needed
 template:
   metadata:
     labels:
-      app: my-django-app
+      app: task
   spec:
     containers:
-    - name: my-django-app
-      image: my-django-app:latest
+    - name: task
+      image: task:latest
       ports:
       - containerPort: 8000 # Adjust the port as per your Django app
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-django-app-service
+  name: task-service
 spec:
   selector:
-    app: my-django-app
+    app: task
   ports:
     - protocol: TCP
       port: 80 # Service port
